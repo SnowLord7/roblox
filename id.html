@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Roblox User Help</title>
+		<style>
+			.list {
+				color: #ffffff;
+				font-weight: bold;
+				margin-bottom: 0px;
+			}
+			
+			.list1 {
+				margin-top: 0px;
+				margin-left: 20px;	
+			}
+			
+			.title {
+				color: #ce0000;
+				margin-bottom: 0px;
+			}
+			
+			.data {
+				color: #d6001c;
+				background-color: #3a3a3a;
+				border: 5px solid #3a3a3a;
+				border-radius: 5px;
+				margin-left: 10px;
+				margin-right: 10px;
+				margin-top: 0px;
+				margin-bottom: 0px;
+			}
+			
+			.data1 {
+				margin-left: 30px;
+			}
+			
+			.fsSection {
+				margin-left: 20px;
+			}
+			
+			.id {
+				margin-left: 20px;
+			}
+			
+			body {
+				background-color: #000000;
+				margin: 50px;
+			}
+			
+			p {
+				color: #FFFFFF;
+			}
+			
+			input {
+				color: #ce0000;
+				background-color: #161616;
+				border: 1px solid #FFFFFF;
+			}
+			
+			input:focus {
+				border: 1px solid #707070;
+			}
+			
+			button {
+				color: #ce0000;
+				background-color: #161616;
+				border: 1px solid #FFFFFF;
+			}
+			
+			button:active {
+				border: 1px solid #707070;
+				background-color: #0c0c0c;
+			}
+		</style>
+	</head>
+	
+	<body>
+		<div class="menu">
+			<h3 class="title">[ID Only] Username: <input type="text" id="nameInput"></input> <button onclick="usernameToId();">Go</button></h3>
+				<p class="list list1">ID: </p> <p id="singleId" class="data data1"></p>
+			<h3 class="title">[Full Search] Username: <input type="text" id="usernameInput"></input> <button onclick="init();">Go</button></h3>
+			<div class="fsSection">
+				<p class="list">Username: </p> <p id="user" class="data"></p>
+				<p class="list">ID: </p> <p id="id" class="data"></p>
+				<p class="list">Robux: </p> <p id="robux" class="data"></p>
+				<p class="list">Join Date: </p> <p id="date" class="data"></p>
+			</div>
+		</div>
+		
+		<script>
+			function init() {
+				//console.log("Checking name...");
+				var username = document.getElementById("usernameInput").value;
+				var xhttp0 = new XMLHttpRequest();
+				var userProfileSite = "https://www.roblox.com/UserCheck/DoesUsernameExist?username="+username;
+				xhttp0.open("GET", "https://cors-anywhere.herokuapp.com/"+userProfileSite, true);
+				xhttp0.send();
+				var waitLoop = window.setInterval(function() {
+					if (xhttp0.response == "") {
+						//console.log("Waiting...");
+					} else {
+						var usernameTaken = JSON.parse(xhttp0.response);
+						if (usernameTaken.success) {
+							document.getElementById("user").innerHTML = username;
+							getRobux(username);
+							window.clearInterval(waitLoop);
+							return 0;
+						} else {
+							document.getElementById("usernameInput").value = "";
+							alert("Please enter a correct username!");	
+							window.clearInterval(waitLoop);
+							return 0;
+						}
+					}
+				}, 10);
+			}
+			
+			function usernameToId() {
+				var user = document.getElementById("nameInput").value;
+				//console.log(user);
+				if (user == "") {
+					alert("Enter a REAL username");
+					document.getElementById("nameInput").value = "";
+				} else {
+					var xhttp = new XMLHttpRequest();
+					var userProfileSite = "https://api.roblox.com/users/get-by-username?username="+user;
+					//console.log(userProfileSite);
+					xhttp.open("GET", "https://cors-anywhere.herokuapp.com/"+userProfileSite, true);
+					xhttp.send();
+					var waitLoop = window.setInterval(function() {
+						if (xhttp.response == "") {
+							//console.log("Waiting...");
+						} else {
+							//console.log(xhttp.response);
+							var response = JSON.parse(xhttp.response);
+							document.getElementById("singleId").innerHTML = response.Id;
+							prompt(user, response.Id);
+							window.clearInterval(waitLoop);
+						}
+					}, 10);
+				}
+			}
+				
+			function getRobux(username) {
+				//console.log("Called getRobux");
+				var profileSite = "http://rbx.trade/p/"+username;
+				var xhttp1 = new XMLHttpRequest();
+				xhttp1.open("GET", "https://cors-anywhere.herokuapp.com/"+profileSite, true);
+				xhttp1.send();
+				var waitLoop0 = window.setInterval(function() {
+					if (xhttp1.response == "") {
+						//console.log("Waiting to get Robux");
+					} else {
+						userToRobux(xhttp1.response);
+						window.clearInterval(waitLoop0);
+					}
+				}, 10);
+			}
+
+			function userToRobux(response) {
+				//console.log("Called userToRobux");
+				try {
+					var robux0 = response.split('<span class=green-text>'); //25
+					var robux1 = robux0[1].search("</span></span></div>");
+					var robux2 = robux0[1].slice(0, robux1-4);
+					document.getElementById("robux").innerHTML = robux2;
+					getId();
+				} catch(e) {}
+			}
+
+			function getId() {
+				//console.log("Called getId");
+				var profileSite = "https://api.roblox.com/users/get-by-username?username="+document.getElementById("user").innerHTML;
+				var xhttp2 = new XMLHttpRequest();
+				xhttp2.open("GET", "https://cors-anywhere.herokuapp.com/"+profileSite, true);
+				xhttp2.send();
+				var waitLoop1 = window.setInterval(function() {
+					if (xhttp2.response == "") {
+						//console.log("Waiting to get Robux");
+					} else {
+						userToId(xhttp2.response);
+						window.clearInterval(waitLoop1);
+						return 0;
+					}
+				}, 10);
+			}
+			
+			function userToId(response) {
+				//console.log("Called userToId");
+				var id = JSON.parse(response);
+				document.getElementById("id").innerHTML = id.Id;
+				joinDate(id.Id);
+			}
+			
+			function joinDate(id) {
+				//console.log("Called joinDate");
+				var profileSite = "https://www.roblox.com/users/"+id+"/profile";
+				var xhttp3 = new XMLHttpRequest();
+				xhttp3.open("GET", "https://cors-anywhere.herokuapp.com/"+profileSite, true);
+				xhttp3.send();
+				var waitLoop2 = window.setInterval(function() {
+					if (xhttp3.response == "") {
+						//console.log("Waiting to load...");
+					} else {
+						//console.log("Called getJoinDate");
+						getJoinDate(xhttp3.response);
+						window.clearInterval(waitLoop2);
+						return 0;
+					}
+				}, 10);
+			}
+
+			function getJoinDate(response) {
+				//console.log("Called getJoinDate");
+				try {
+					var date0 = response.split("<p class=text-lead>"); //21
+					var date1 = date0[1].search("class=profile");
+					var date2 = date0[1].slice(0, date1-4);
+					document.getElementById("date").innerHTML = date2;
+				} catch(e) {
+					//console.log(e);
+				}
+			}
+			
+		</script>
+	</body>
+</html>
