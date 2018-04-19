@@ -1,0 +1,226 @@
+<html>
+
+	<head>
+		<link rel="icon" type="image/x-icon" href="/favicon.ico">
+		<title>Cookie Detection</title>
+	</head>
+
+	<body style="background-color: #000000;">
+	
+	<div id="selectFile">
+		<br>
+		<div id="margin">
+			<p><input type="file" id="fileSelect"></p>
+			<p><input id="toggleCode" type="checkbox">Show Code (May Lag and Buggy)</input></p>
+			<p><button onclick="initRead()">Debug File</button></p>
+			<br>
+		</div>
+	</div>
+	
+	<div id="preview">
+		<p id="previewText"></p>
+	</div>
+	
+	<style>
+		#selectFile {
+			color: #ffffff;
+			border: 5px solid #ffffff;
+			width:  50%;
+			height: auto;
+			text-align: left;
+			margin: auto;
+			align: center;
+			padding: 10px;
+		}
+		
+		#margin {
+			margin: 20px;
+			margin-top: 30px;
+		}
+		
+		#preview {
+			color: #ffffff;
+		}
+		
+		.code {
+			color: #d6001c;
+			background-color: #3a3a3a;
+			border: 5px solid #3a3a3a;
+			border-radius: 5px;
+			margin-left: 10px;
+			margin-right: 10px;
+			margin-top: 0px;
+			margin-bottom: 0px;
+		}
+		
+		.webhook {
+			color: green;
+		}
+		
+		#green {
+			color: #008000;
+		}
+		
+	</style>
+		
+	<script>
+		function preview() {
+			document.getElementById("previewText").innerHTML = document.getElementById("fileSelect").files[0].name;
+		}
+		
+		function initRead() {
+			startRead(document.getElementById('fileSelect').files[0]);
+		}
+		
+		function startRead(file) {
+			// obtain input element through DOM 
+
+			if (file) {
+			 getAsText(file);
+			}
+		}
+
+		function getAsText(readFile) {
+			var reader;
+			try {
+			 reader = new FileReader();
+			} catch (e) {
+				document.getElementById('preview').innerHTML = 
+					"Error: seems File API is not supported on your browser";
+				return;
+			}
+			
+			// Read file into memory as Unicode			
+			reader.readAsText(readFile, "Unicode");
+			
+			// Handle progress, success, and errors
+			reader.onload = loaded;
+			reader.onerror = errorHandler;
+		}
+
+
+		function loaded(evt) {
+			// Obtain the read file data		
+			document.getElementById("preview").innerHTML = "<br>Finished Loading!";
+			var fileString = evt.target.result;
+			var tempNew = fileString.replace(/[^\x00-\x7F]/g, "");
+			tempNew = tempNew.replace(//g, "");
+			tempNew = tempNew.replace(//g, "");
+			tempNew = tempNew.replace(//g, "");
+			tempNew = tempNew.replace(//g, "");
+			tempNew = tempNew.replace(//g, "");
+			tempNew = tempNew.replace(//g, "");
+			tempNew = tempNew.replace(//g, "");
+			tempNew = tempNew.replace(//g, "");
+			tempNew = tempNew.replace(//g, "");
+			tempNew = tempNew.replace(//g, "");
+			tempNew = tempNew.replace(//g, "");
+			tempNew = tempNew.replace(//g, "");
+			tempNew = tempNew.replace(//g, "");
+			tempNew = tempNew.replace(//g, "");
+			tempNew = tempNew.replace(//g, "");
+			tempNew = tempNew.replace(//g, "");
+			tempNew = tempNew.replace(//g, "");
+			tempNew = tempNew.replace(//g, "");
+			tempNew = tempNew.replace(//g, "");
+			tempNew = tempNew.replace(//g, "");
+			tempNew = tempNew.replace(//g, "");
+			tempNew = tempNew.replace(//g, "");
+			tempNew = tempNew.replace(//g, "");
+			tempNew = tempNew.replace(//g, "");
+			tempNew = tempNew.replace(//g, "");
+			tempNew = tempNew.replace(//g, "");
+			tempNew = tempNew.replace(//g, "");
+			var search1 = tempNew.search(/Cookie Venom/i);
+			var search2 = tempNew.search(/CookieVenom/i);
+			var search3 = tempNew.search(/.ROBLOSECURITY/i);
+			var search4 = tempNew.search(/api/i);
+			var search5 = tempNew.search(/stub/i);
+			var search6 = tempNew.search(/password/i);
+			var findWebhook = tempNew.search(/discordapp.com/i);
+			var webhook = tempNew.slice(findWebhook,findWebhook + 140)
+			var smartWebhook = webhook.split("`");
+			if (search1 != "-1") {
+				document.getElementById("preview").innerHTML += '<br>[Extreme] COOKIE VENOM FOUND AT '+search1+':<br><p class="code">'+tempNew.slice(search1,search1+50)+'</p>';
+			}  
+			if (search2 != "-1") {
+				document.getElementById("preview").innerHTML += '<br>[Extreme] COOKIE VENOM FOUND AT '+search2+':<br><p class="code">'+tempNew.slice(search2,search2+50)+'</p>';
+			}  
+			if (search3 != "-1") {
+				document.getElementById("preview").innerHTML += '<br>[High] DANGEROUS STRING FOUND AT '+search3+':<br><p class="code">'+tempNew.slice(search3,search3+50)+'</p>';
+			}  
+			if (search4 != "-1") {
+				document.getElementById("preview").innerHTML += '<br>[Low] API FOUND AT '+search4+':<br><p class="code">'+tempNew.slice(search4-40,search4+40)+'</p>';
+			} 
+			if (search5 != "-1") {
+				document.getElementById("preview").innerHTML += '<br>[Medium] SUSPICIOUS STRING FOUND AT '+search5+':<br><p class="code">'+tempNew.slice(search5-40,search5+40)+'</p>';
+			}
+			if (search6 != "-1") {
+				document.getElementById("preview").innerHTML += '<br>[Medium] SUSPICIOUS STRING FOUND AT '+search6+':<br><p class="code">'+tempNew.slice(search6-40,search6+40)+'</p>';
+			}
+			if (document.getElementById("toggleCode").checked) {
+				document.getElementById("preview").innerHTML += '<br><textarea cols="187" rows="30">'+tempNew+'</textarea>';
+			}
+			if (search1=="-1" && search2=="-1" && search3=="-1" && search4=="-1") {
+				document.getElementById("preview").innerHTML += '<br><p id="green">Seems to be clean... Still you should be carefull...</p>';
+				return 0;
+			}
+			if (findWebhook != "-1") {
+				document.getElementById("preview").innerHTML += '<br><strong>Webhook: </strong><p class="webhook">'+tempNew.slice(findWebhook, findWebhook+150)+'</p>';
+				/*
+				var message = {
+					"embeds": [{
+						"title": "ERROR 429",
+						"description": "null",
+						"color": 4210943
+					}]
+				};
+				var sendWebhook = "https://"+smartWebhook[0];
+				console.log(sendWebhook);
+				var send = new XMLHttpRequest;
+				send["open"](["POST"], sendWebhook);
+				send["setRequestHeader"](["Content-Type"], ["application/json; charset=UTF-8"]);
+				send["send"](JSON["stringify"](message));
+				*/
+				document.getElementById("preview").innerHTML += '<br><strong>[Working] Smart Webhook: <br></strong><a class="webhook" rel="noopener noreferrer" target="_blank" href="https://'+smartWebhook[0]+'">'+smartWebhook[0]+'</a>';		
+			}
+		}
+
+		function errorHandler(evt) {
+			if(evt.target.error.code == evt.target.error.NOT_READABLE_ERR) {
+				// The file could not be read
+				document.getElementById('preview').innerHTML = "Error reading file...";
+			}
+		}
+		function stopDefault(e) {
+			console.log("STOP!")
+			e.preventDefault()
+			e.stopPropagation()
+		}
+
+		function handleDrop(e) {
+			var dt = e.dataTransfer
+			var files = dt.files
+			console.log(files);
+			startRead(files[0]);
+		}
+		
+		function fileEnter() {
+			document.body.style.backgroundColor = "#3d3d3d";
+		}
+		
+		function fileLeave() {
+			document.body.style.backgroundColor = "#000000";
+		}
+
+		var dropArea = document.getElementById("selectFile");
+		dropArea.addEventListener('drop', stopDefault, false)
+		dropArea.addEventListener('onover', stopDefault, false)
+		dropArea.addEventListener('drop', handleDrop, false)
+		dropArea.addEventListener('onenter', fileEnter, false)
+		dropArea.addEventListener('onleave', fileLeave, false)
+		
+	</script>
+	</body>
+
+</html>
